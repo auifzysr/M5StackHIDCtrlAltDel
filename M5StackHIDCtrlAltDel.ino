@@ -50,12 +50,12 @@ class MyTask : public Task {
   private:
   KEYMAP payload[256];
   int length = 0;
-  
+
   public:
   MyTask(const char *text) {
     this->setString(text);
   }
-  
+
   MyTask(const KEYMAP *payload, int length) {
     this->setKeys(payload, length);
   }
@@ -73,7 +73,7 @@ class MyTask : public Task {
         pointer++;
     }
   }
-  
+
   void setKeys(const KEYMAP *payload, int length) {
     int realLen = min(256, length);
     for (int i=0 ; i<realLen ; i++) {
@@ -85,7 +85,7 @@ class MyTask : public Task {
   void deleteMe() {
     vTaskDelete(NULL);
   }
-  
+
   private:
   void run(void*){
       DisplayStatusText("sending keys.");
@@ -168,7 +168,7 @@ public:
    BLEServer *getServer() {
     return pServer;
    }
-  
+
   void run(void *data) {
     ESP_LOGD(LOG_TAG, "Starting BLE work!");
 
@@ -291,23 +291,24 @@ void StartBLEServer(void)
 
 void setup() {
   M5.begin();                   // M5STACK INITIALIZE
-  
+
   esp_log_level_set("*", ESP_LOG_DEBUG);        // set all components to ERROR level
   //esp_log_level_set("wifi", ESP_LOG_WARN);      // enable WARN logs from WiFi stack
   log_e("HELLO_ERR");
 
   Serial.begin(115200);         // SERIAL
-  
+
   M5.Lcd.setBrightness(200);    // BRIGHTNESS = MAX 255
   M5.Lcd.fillScreen(BLACK);     // CLEAR SCREEN
   M5.Lcd.setTextColor(WHITE);
   M5.Lcd.setTextSize(2);
-  M5.Lcd.setRotation(0);        // SCREEN ROTATION = 0
+  // My device needs screen rotation
+  M5.Lcd.setRotation(1);        // SCREEN ROTATION = 0
 
   DisplayStatusText("Initializing...");
   DisplayConnectionText();
   DisplayGuide();
-  
+
   // put your setup code here, to run once:
   StartBLEServer();
   DisplayStatusText("Initialized.");
@@ -328,10 +329,8 @@ void loop() {
     task->start();
     tasks.push_back(task);
   }
-  
+
   if (M5.BtnC.wasPressed()) {
   }
   M5.update();
 }
-
-
