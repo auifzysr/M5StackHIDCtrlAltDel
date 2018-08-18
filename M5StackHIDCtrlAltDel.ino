@@ -331,6 +331,7 @@ void loop() {
   }
 
   if (M5.BtnC.wasPressed()) {
+    M5.powerOFF();
   }
   M5.update();
 }
